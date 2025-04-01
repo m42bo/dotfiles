@@ -28,10 +28,19 @@ These dotfiles include configurations for:
    cd ~/.dotfiles
    ```
 
-2. Run the installation script:
+2. Create symbolic links:
    ```bash
-   ./install.sh
+   # For Fish shell configuration
+   ln -s ~/.dotfiles/fish ~/.config/fish
+
+   # For Neovim configuration
+   ln -s ~/.dotfiles/nvim ~/.config/nvim
+
+   # For Git configuration
+   ln -s ~/.dotfiles/git/.gitconfig ~/.gitconfig
    ```
+
+Note: Before creating symlinks, make sure to backup your existing configurations.
 
 ## Components
 
@@ -67,9 +76,15 @@ To update the configurations:
    git pull
    ```
 
-2. Run the update script:
+2. If there are new configuration files, create their symbolic links as shown in the Installation section.
+
+3. Reload your shell or restart your editor to apply any new changes:
    ```bash
-   ./update.sh
+   # For Fish shell
+   source ~/.config/fish/config.fish
+
+   # For Neovim, restart or run
+   :source $MYVIMRC
    ```
 
 ## Contributing
