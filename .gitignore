@@ -1,0 +1,28 @@
+# Fish shell
+.config/fish/fish_history
+.config/fish/fishd.*
+.config/fish/conf.d/local.fish
+.config/fish/local.fish
+
+# Neovim
+.config/nvim/plugin/
+.config/nvim/.netrwhist
+.config/nvim/spell/
+.config/nvim/lazy/
+
+# Node.js
+node_modules/
+.npm/
+.node-gyp/
+
+# Misc
+.DS_Store
+.env
+*.log
+*.swp
+*.swo
+
+# Local configuration
+.config/*/local.conf
+.config/*/local.config
+
