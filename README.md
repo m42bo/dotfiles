@@ -383,128 +383,149 @@ brew cleanup       # Remove old versions
 
 ## Neovim Setup and Configuration
 
-### Installing Neovim
-While we've already installed Neovim via Homebrew, ensure it's properly set up:
+### Installing Neovim with Homebrew
+
+The recommended way to install Neovim is through Homebrew, which provides the latest stable version:
 
 ```bash
-# Verify Neovim installation
+# Install Neovim
+brew install neovim
+
+# Verify the installation
 nvim --version
 ```
 
+### Creating a Vim Symlink
+
+For better compatibility with systems that might look for the standard `vim` command, create a symlink from Neovim to Vim:
+
+```bash
+# Create a symlink from nvim to vim
+ln -s $(which nvim) /home/linuxbrew/.linuxbrew/bin/vim
+
+# Verify the symlink works
+vim --version  # Should show Neovim version information
+```
+
+### Clone and Setup Dotfiles
+
+To use this Neovim configuration:
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
+   cd ~/.dotfiles
+   ```
+
+2. Create symbolic links to the Neovim configuration:
+   ```bash
+   # First, backup existing configuration if needed
+   mv ~/.config/nvim{,.bak} 2>/dev/null
+   mv ~/.local/share/nvim{,.bak} 2>/dev/null
+   mv ~/.local/state/nvim{,.bak} 2>/dev/null
+   mv ~/.cache/nvim{,.bak} 2>/dev/null
+   
+   # Create symbolic links
+   ln -sf ~/.dotfiles/.config/nvim ~/.config/nvim
+   ```
+
 ### Setting Up LazyVim
-We'll use LazyVim as our Neovim configuration framework:
 
-1. First, backup your existing Neovim configuration if you have one:
-```bash
-# Backup existing config
-mv ~/.config/nvim{,.bak}
-mv ~/.local/share/nvim{,.bak}
-mv ~/.local/state/nvim{,.bak}
-mv ~/.cache/nvim{,.bak}
-```
+This configuration uses LazyVim as the base Neovim configuration framework. When you first launch Neovim, LazyVim will automatically install:
 
-2. Clone LazyVim starter:
-```bash
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-```
+1. Launch Neovim:
+   ```bash
+   nvim
+   ```
+
+2. LazyVim will automatically install itself and all configured plugins. Wait for this process to complete.
+
+3. Install all configured packages:
+   ```
+   # Within Neovim, run:
+   :Lazy sync
+   ```
+
+4. Install LSP servers and tools:
+   ```
+   # Within Neovim, run:
+   :Mason
+   # Use the interface to ensure all servers are installed
+   ```
+
+5. Verify health status:
+   ```
+   :checkhealth
+   ```
 
 ### Essential Plugins and Configuration
-Create or modify the following files in your Neovim configuration:
 
-1. `~/.config/nvim/lua/plugins/coding.lua`:
-```lua
-return {
-  -- Coding plugins
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({})
-    end,
-  },
-  {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "eslint-lsp",
-        "prettierd",
-        "typescript-language-server",
-        "json-lsp",
-        "tailwindcss-language-server",
-        "rust-analyzer",
-      },
-    },
-  },
-}
-```
+This configuration includes the following essential plugins and configurations:
 
-2. `~/.config/nvim/lua/plugins/lsp.lua`:
-```lua
-return {
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        tsserver = {},
-        eslint = {},
-        tailwindcss = {},
-        rust_analyzer = {},
-      },
-    },
-  },
-}
-```
+1. LSP Support:
+   - TypeScript/JavaScript
+   - ESLint 
+   - Prettier for formatting
+   - Rust analyzer
+   - Tailwind CSS
+   - JSON
 
-3. `~/.config/nvim/lua/plugins/formatting.lua`:
-```lua
-return {
-  {
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        javascript = { "prettierd" },
-        typescript = { "prettierd" },
-        javascriptreact = { "prettierd" },
-        typescriptreact = { "prettierd" },
-        json = { "prettierd" },
-        markdown = { "prettierd" },
-        lua = { "stylua" },
-        rust = { "rustfmt" },
-      },
-    },
-  },
-}
-```
+2. Editor Enhancements:
+   - GitHub Copilot integration
+   - Telescope for fuzzy finding
+   - Which-key for keybinding help
+   - Neo-tree file explorer
+   - Git integration
 
-### Installing Node.js Dependencies
-Some LSP servers require Node.js packages:
+3. Custom Configuration Files:
+   - `~/.config/nvim/lua/plugins/coding.lua` - Coding and completion plugins
+   - `~/.config/nvim/lua/plugins/lsp.lua` - Language server configurations
+   - `~/.config/nvim/lua/plugins/formatting.lua` - Code formatting settings
 
-```bash
-npm install -g typescript typescript-language-server @tailwindcss/language-server eslint prettier
-```
+### Deployment Steps
 
-### Verifying Neovim Setup
-1. Open Neovim:
-```bash
-nvim
-```
+To deploy this Neovim configuration to a new system:
 
-2. Run health checks:
-```
-:checkhealth
-```
+1. Ensure prerequisites are installed:
+   ```bash
+   # Install Homebrew if not installed
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   
+   # Install Neovim
+   brew install neovim
+   
+   # Create vim symlink if desired
+   ln -s $(which nvim) /home/linuxbrew/.linuxbrew/bin/vim
+   
+   # Install Node.js (required for many LSP servers)
+   brew install node
+   
+   # Install global Node packages for LSP
+   npm install -g typescript typescript-language-server prettier eslint
+   ```
 
-3. Update plugins:
-```
-:Lazy update
-```
+2. Clone the dotfiles repository:
+   ```bash
+   git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
+   ```
 
-4. Install LSP servers:
-```
-:Mason
-```
+3. Create symbolic links:
+   ```bash
+   ln -sf ~/.dotfiles/.config/nvim ~/.config/nvim
+   ```
+
+4. Launch Neovim and wait for automatic installation:
+   ```bash
+   nvim
+   ```
+
+5. Verify the installation:
+   ```
+   # Within Neovim:
+   :checkhealth
+   :Lazy sync
+   :Mason
+   ```
 
 ### Common Keybindings
 LazyVim comes with many useful keybindings:
