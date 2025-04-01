@@ -26,3 +26,6 @@ node_modules/
 .config/*/local.conf
 .config/*/local.config
 
+.config/github-copilot/
+.config/github-copilot/
+.config/github-copilot/
